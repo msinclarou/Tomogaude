@@ -404,11 +404,16 @@
     void petDisplay.offsetWidth; // reflow
     petDisplay.classList.add('jump');
 
-    const earns = 10;
+    const earns = hunger >= 50 ? 20 : 10;
     money += earns;
     moneyDisplay.textContent = '$' + money;
 
-    const msgs = [
+    const msgs = hunger >= 50 ? [
+      `Lumie is well-fed and crushed it at work! +$${earns}!`,
+      `Full tummy = big energy! Lumie earned $${earns}!`,
+      `Lumie hustled extra hard — $${earns} earned!`,
+      `Happy Lumie is a productive Lumie! +$${earns}.`,
+    ] : [
       `Lumie went to work and earned $${earns}!`,
       `Lumie hustled hard — $${earns} earned!`,
       `Lumie completed a job! +$${earns}.`,
