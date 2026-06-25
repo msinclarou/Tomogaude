@@ -64,6 +64,25 @@ press work button</textarea>
       <div class="btn-row">
         <button id="run-btn">▶ START</button>
         <button id="stop-btn">■ STOP</button>
+        <button id="info-btn">? INFO</button>
+      </div>
+
+      <!-- Info overlay -->
+      <div id="info-overlay" class="info-overlay hidden">
+        <div class="info-header">
+          <span class="info-title">✦ COMMANDS</span>
+          <button id="info-close-btn" class="info-close">✕</button>
+        </div>
+        <table class="info-table">
+          <thead>
+            <tr><th>Command</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>press work button</td><td>Makes Lumie work. Earns $10 (or $20 if hunger &gt; 50%).</td></tr>
+            <tr><td>press feed button</td><td>Feeds Lumie, adding 20% hunger. Max 100%.</td></tr>
+          </tbody>
+        </table>
+        <p class="info-tip">💡 Commands are matched by keyword — <em>work</em> or <em>feed</em> anywhere in the line will work. One command per line.</p>
       </div>
     </div>
 

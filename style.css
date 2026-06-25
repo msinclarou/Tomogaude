@@ -321,3 +321,110 @@ button:active {
   border-color: #cc0000;
   box-shadow: 3px 3px 0 #cc0000;
 }
+
+#info-btn {
+  background: #3399ff;
+  color: white;
+  border-color: #0055cc;
+  box-shadow: 3px 3px 0 #0055cc;
+}
+
+/* Info overlay */
+.info-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: white;
+  border: 3px solid #330066;
+  border-radius: 4px;
+  box-shadow: 4px 4px 0 #330066;
+  padding: 0;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.info-overlay.hidden {
+  display: none;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #330066;
+  padding: 4px 10px;
+}
+
+.info-title {
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.info-close {
+  background: #ff4444;
+  color: white;
+  border: 2px solid #aa0000;
+  box-shadow: 2px 2px 0 #aa0000;
+  border-radius: 3px;
+  padding: 1px 7px;
+  font-size: 12px;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.info-close:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #aa0000;
+}
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin: 10px 0 0 0;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.info-table th {
+  text-align: left;
+  color: #660099;
+  border-bottom: 2px solid #cc99ff;
+  padding: 3px 6px;
+}
+
+.info-table td {
+  padding: 5px 6px;
+  vertical-align: top;
+  color: #330066;
+  border-bottom: 1px dashed #e0ccff;
+}
+
+.info-table td:first-child {
+  font-weight: bold;
+  white-space: nowrap;
+  background: #f0e6ff;
+}
+
+.info-tip {
+  font-size: 11px;
+  color: #660099;
+  padding: 8px 10px 10px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.info-tip em {
+  background: #f0e6ff;
+  font-style: normal;
+  padding: 0 3px;
+  border-radius: 2px;
+}
+
+/* Anchor instruction-panel so the overlay can position against it */
+.instruction-panel {
+  position: relative;
+}

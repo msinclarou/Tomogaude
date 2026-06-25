@@ -213,3 +213,11 @@ stopBtn.addEventListener('click', () => {
   stopProgram();
   addLog('Instructions stopped.');
 });
+
+// ── Info overlay ───────────────────────────────────────────────
+const infoBtn = document.getElementById('info-btn');
+const infoOverlay = document.getElementById('info-overlay');
+const infoCloseBtn = document.getElementById('info-close-btn');
+
+infoBtn.addEventListener('click', () => infoOverlay.classList.toggle('hidden'));
+infoCloseBtn.addEventListener('click', () => infoOverlay.classList.add('hidden'));
