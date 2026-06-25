@@ -240,3 +240,84 @@ button:active {
   border-top: 2px dashed #cc99ff;
   margin: 8px 0;
 }
+
+/* Instruction panel */
+.instruction-panel {
+  width: 280px;
+}
+
+.instruction-hint {
+  font-size: 11px;
+  color: #660099;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.instruction-hint em {
+  background: #f0e6ff;
+  font-style: normal;
+  padding: 0 3px;
+  border-radius: 2px;
+}
+
+#instruction-input {
+  width: 100%;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;
+  color: #330066;
+  background: #f0e6ff;
+  border: 2px dashed #cc66ff;
+  border-radius: 4px;
+  padding: 8px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+#instruction-input:disabled {
+  opacity: 0.7;
+}
+
+.instruction-list {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #330066;
+  min-height: 18px;
+}
+
+.program-line {
+  padding: 3px 8px;
+  border-left: 4px solid transparent;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.program-line.active {
+  background: #ffe680;
+  border-left: 4px solid #cc9900;
+  font-weight: bold;
+}
+
+.program-line.done {
+  color: #aa99bb;
+}
+
+#run-btn {
+  background: #33cc33;
+  color: white;
+  border-color: #1a8a1a;
+  box-shadow: 3px 3px 0 #1a8a1a;
+}
+
+#run-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 3px 3px 0 #1a8a1a;
+}
+
+#stop-btn {
+  background: #ff6666;
+  color: white;
+  border-color: #cc0000;
+  box-shadow: 3px 3px 0 #cc0000;
+}

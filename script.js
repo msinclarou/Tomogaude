@@ -132,3 +132,84 @@ setInterval(() => {
 }, 30000);
 
 updateHunger();
+
+// ── Instruction panel ──────────────────────────────────────────
+// Reads commands (one per line) and steps through them, one per
+// second, highlighting the current line — like a program counter.
+const instructionInput = document.getElementById('instruction-input');
+const instructionList = document.getElementById('instruction-list');
+const runBtn = document.getElementById('run-btn');
+const stopBtn = document.getElementById('stop-btn');
+
+const STEP_MS = 1000;
+let programTimer = null;
+let programLines = [];
+
+// Map a typed line to an action. Reuses the existing buttons so all
+// the animation, earnings and logging behaviour stays in one place.
+function executeCommand(raw) {
+  const cmd = raw.trim().toLowerCase();
+  if (cmd.includes('work')) {
+    workBtn.click();
+  } else if (cmd.includes('feed')) {
+    feedBtn.click();
+  } else {
+    addLog(`Unknown command: "${raw.trim()}"`);
+  }
+}
+
+// Re-draw the program tape, marking the active line and dimming the
+// lines that have already run. Pass -1 to clear all highlighting.
+function renderProgram(activeIndex) {
+  instructionList.innerHTML = '';
+  programLines.forEach((line, i) => {
+    const div = document.createElement('div');
+    div.className = 'program-line';
+    if (i === activeIndex) div.classList.add('active');
+    else if (activeIndex > -1 && i < activeIndex) div.classList.add('done');
+    div.textContent = line.trim();
+    instructionList.appendChild(div);
+  });
+}
+
+function stopProgram() {
+  if (programTimer) {
+    clearInterval(programTimer);
+    programTimer = null;
+  }
+  runBtn.disabled = false;
+  instructionInput.disabled = false;
+  renderProgram(-1);
+}
+
+runBtn.addEventListener('click', () => {
+  if (programTimer) return; // already running
+  programLines = instructionInput.value.split('\n').filter(l => l.trim() !== '');
+  if (programLines.length === 0) {
+    addLog('No instructions to run!');
+    return;
+  }
+  runBtn.disabled = true;
+  instructionInput.disabled = true;
+
+  let counter = 0;
+  renderProgram(counter);
+  executeCommand(programLines[counter]);
+
+  programTimer = setInterval(() => {
+    counter++;
+    if (counter >= programLines.length) {
+      stopProgram();
+      addLog('Instruction sequence complete! ✓');
+      return;
+    }
+    renderProgram(counter);
+    executeCommand(programLines[counter]);
+  }, STEP_MS);
+});
+
+stopBtn.addEventListener('click', () => {
+  if (!programTimer) return;
+  stopProgram();
+  addLog('Instructions stopped.');
+});
