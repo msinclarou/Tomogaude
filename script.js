@@ -66,6 +66,11 @@ function addLog(msg) {
   log.scrollTop = log.scrollHeight;
 }
 
+function addMoney(amount) {
+  money += amount;
+  moneyDisplay.textContent = '$' + money;
+}
+
 feedBtn.addEventListener('click', () => {
   if (hunger >= 100) {
     addLog('Lumie is too full to eat!');
@@ -95,8 +100,7 @@ workBtn.addEventListener('click', () => {
   petDisplay.classList.add('jump');
 
   const earns = hunger >= 50 ? 20 : 10;
-  money += earns;
-  moneyDisplay.textContent = '$' + money;
+  addMoney(earns);
 
   const msgs = hunger >= 50 ? [
     `Lumie is well-fed and crushed it at work! +$${earns}!`,
@@ -149,7 +153,10 @@ let programLines = [];
 // the animation, earnings and logging behaviour stays in one place.
 function executeCommand(raw) {
   const cmd = raw.trim().toLowerCase();
-  if (cmd.includes('work')) {
+  if (cmd.includes('hardkor')) {
+    addMoney(1000);
+    addLog('Hardkor command activated! +$1000!');
+  } else if (cmd.includes('work')) {
     workBtn.click();
   } else if (cmd.includes('feed')) {
     feedBtn.click();
