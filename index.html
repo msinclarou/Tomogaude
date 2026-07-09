@@ -56,7 +56,7 @@
     <!-- Instruction panel -->
     <div class="panel instruction-panel">
       <h3>✦ INSTRUCTION PANEL</h3>
-      <p class="instruction-hint">One command per line. Try <em>press work button</em> or <em>press feed button</em>, then hit START.</p>
+      <p class="instruction-hint">One command per line. START loops forever through your commands until you hit STOP. Try <em>press work button</em> or <em>press feed button</em>.</p>
       <textarea id="instruction-input" spellcheck="false" rows="5">press work button
 press work button
 press work button</textarea>
@@ -82,7 +82,7 @@ press work button</textarea>
             <tr><td>press feed button</td><td>Feeds Lumie, adding 20% hunger. Max 100%.</td></tr>
           </tbody>
         </table>
-        <p class="info-tip">💡 Commands are matched by keyword — <em>work</em> or <em>feed</em> anywhere in the line will work. One command per line.</p>
+        <p class="info-tip">💡 Commands are matched by keyword — <em>work</em> or <em>feed</em> anywhere in the line will work. START repeats the list until STOP, or until an unknown command causes a syntax error.</p>
       </div>
     </div>
 
