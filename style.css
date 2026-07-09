@@ -428,3 +428,35 @@ button:active {
 .instruction-panel {
   position: relative;
 }
+
+.pet-switcher {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.pet-switch {
+  font-size: 11px;
+  padding: 6px 10px;
+  background: #e6ccff;
+  color: #330066;
+  border-color: #9966cc;
+  box-shadow: 3px 3px 0 #9966cc;
+}
+
+.pet-switch.active {
+  background: #330066;
+  color: white;
+  border-color: #ff99cc;
+  box-shadow: 3px 3px 0 #ff99cc;
+}
+
+#pet-kind {
+  color: #660099;
+  font-size: 11px;
+  margin-top: 3px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}

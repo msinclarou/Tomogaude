@@ -1,8 +1,130 @@
-let hunger = 0;
-let money = 0;
-let working = false;
+let currentPet = 'lumie';
+
+const pets = {
+  lumie: {
+    name: 'LUMIE',
+    kind: 'cute carbon based lifeform',
+    arrival: 'Lumie has arrived! She looks around curiously.',
+    moods: {
+      full: '*wags tail happily* :)',
+      hungry: '*still looks hungry...*',
+      empty: '*stares at you expectantly*',
+      working: '*zooooom*',
+    },
+    faces: {
+      sad: `
+  /\\_____/\\
+ (  o   o  )
+  =  ---  =     "..."
+  (  ___  )
+   \\_____/
+  __|| ||__
+ (__)   (__)`.trim(),
+      happy: `
+  /\\_____/\\
+ (  ^   ^  )
+  =  ___  =     ":D"
+  (       )
+   \\_____/
+  __|| ||__
+ (__)   (__)`.trim(),
+      work: `
+  /\\_____/\\
+ (  *   *  )
+  = \\___/ =     "!!!"
+  (       )
+   \\_____/
+  __|| ||__
+ (__)   (__)`.trim(),
+    },
+    feedMessages: [
+      'Lumie gobbles up the food!',
+      'Lumie munches happily.',
+      'Nom nom nom...',
+      'Lumie says thank you!',
+    ],
+    fullMessage: 'Lumie is too full to eat!',
+    hungryMessage: 'Lumie is very hungry!',
+    workMessagesFed: earns => [
+      `Lumie is well-fed and crushed it at work! +$${earns}!`,
+      `Full tummy = big energy! Lumie earned $${earns}!`,
+      `Lumie hustled extra hard — $${earns} earned!`,
+      `Happy Lumie is a productive Lumie! +$${earns}.`,
+    ],
+    workMessagesHungry: earns => [
+      `Lumie went to work and earned $${earns}!`,
+      `Lumie hustled hard — $${earns} earned!`,
+      `Lumie completed a job! +$${earns}.`,
+      `Lumie brought home $${earns}. Good girl!`,
+    ],
+  },
+  grouchie: {
+    name: 'GROUCHIE',
+    kind: 'grumpy robot',
+    arrival: 'Grouchie boots up, scans the room, and judges the furniture.',
+    moods: {
+      full: '*battery reserves acceptable. enthusiasm denied.*',
+      hungry: '*fuel deficit detected. obviously.*',
+      empty: '*awaiting control panel input. do not poke chassis.*',
+      working: '*servos grinding with professional resentment*',
+    },
+    faces: {
+      sad: `
+   .--------.
+  / [o] [o] \\
+ |    ___    |    "hmph"
+ |  _|___|_  |
+  \\________/
+   /|  || |\\
+  /_|__||_|_\\`.trim(),
+      happy: `
+   .--------.
+  / [^] [^] \\
+ |    ___    |    "adequate"
+ |  _|___|_  |
+  \\________/
+   /|  || |\\
+  /_|__||_|_\\`.trim(),
+      work: `
+   .--------.
+  / [>] [<] \\
+ |  __===__  |    "PROCESSING"
+ |  _|___|_  |
+  \\________/
+   /|  || |\\
+  /_|__||_|_\\`.trim(),
+    },
+    feedMessages: [
+      'Grouchie accepts fuel pellets with a suspicious beep.',
+      'Grouchie refuels. It does not say thank you.',
+      'Input received: nutrients. Output: grudging compliance.',
+      'Grouchie charges quietly and radiates judgment.',
+    ],
+    fullMessage: 'Grouchie rejects surplus fuel. Inefficient.',
+    hungryMessage: 'Grouchie emits a low-battery grumble.',
+    workMessagesFed: earns => [
+      `Grouchie calculates optimal profits and earns $${earns}. Naturally.`,
+      `With sufficient fuel, Grouchie completes the task. +$${earns}.`,
+      `Grouchie outperforms expectations and remains unimpressed. +$${earns}.`,
+      `Maximum efficiency achieved. Grouchie earned $${earns}.`,
+    ],
+    workMessagesHungry: earns => [
+      `Grouchie works through the fuel warning and earns $${earns}.`,
+      `Grouchie completes a job while complaining in binary. +$${earns}.`,
+      `Suboptimal fuel, acceptable output: $${earns} earned.`,
+      `Grouchie brings home $${earns} and a bad attitude.`,
+    ],
+  },
+};
+
+const petStats = {
+  lumie: { hunger: 0, money: 0, working: false },
+  grouchie: { hunger: 0, money: 0, working: false },
+};
 
 const petDisplay = document.getElementById('pet-display');
+const petName = document.getElementById('pet-name');
+const petKind = document.getElementById('pet-kind');
 const hungerBar = document.getElementById('hunger-bar');
 const hungerPct = document.getElementById('hunger-pct');
 const petMood = document.getElementById('pet-mood');
@@ -10,53 +132,64 @@ const moneyDisplay = document.getElementById('money-display');
 const log = document.getElementById('log');
 const workBtn = document.getElementById('work-btn');
 const feedBtn = document.getElementById('feed-btn');
+const petActionButtons = document.getElementById('pet-action-buttons');
+const lumieBtn = document.getElementById('lumie-btn');
+const grouchieBtn = document.getElementById('grouchie-btn');
 
-const SAD_PET = `
-  /\\_____/\\
- (  o   o  )
-  =  ---  =     "..."
-  (  ___  )
-   \\_____/
-  __|| ||__
- (__)   (__)`.trim();
+function pet() {
+  return pets[currentPet];
+}
 
-const HAPPY_PET = `
-  /\\_____/\\
- (  ^   ^  )
-  =  ___  =     ":D"
-  (       )
-   \\_____/
-  __|| ||__
- (__)   (__)`.trim();
+function stats() {
+  return petStats[currentPet];
+}
 
-const WORK_PET = `
-  /\\_____/\\
- (  *   *  )
-  = \\___/ =     "!!!"
-  (       )
-   \\_____/
-  __|| ||__
- (__)   (__)`.trim();
+function randomFrom(messages) {
+  return messages[Math.floor(Math.random() * messages.length)];
+}
 
 function renderPet(face) {
-  petDisplay.textContent = face || (hunger >= 50 ? HAPPY_PET : SAD_PET);
+  const currentStats = stats();
+  petDisplay.textContent = face || (currentStats.hunger >= 50 ? pet().faces.happy : pet().faces.sad);
 }
 
 function updateHunger() {
-  hungerBar.style.width = hunger + '%';
-  hungerPct.textContent = hunger + '%';
-  if (hunger >= 50) {
+  const currentPetStats = stats();
+  hungerBar.style.width = currentPetStats.hunger + '%';
+  hungerPct.textContent = currentPetStats.hunger + '%';
+  if (currentPetStats.hunger >= 50) {
     hungerBar.classList.add('fed');
-    petMood.textContent = '*wags tail happily* :)';
+    petMood.textContent = pet().moods.full;
   } else {
     hungerBar.classList.remove('fed');
-    if (hunger === 0) {
-      petMood.textContent = '*stares at you expectantly*';
+    if (currentPetStats.hunger === 0) {
+      petMood.textContent = pet().moods.empty;
     } else {
-      petMood.textContent = '*still looks hungry...*';
+      petMood.textContent = pet().moods.hungry;
     }
   }
   renderPet();
+}
+
+function updatePetControls() {
+  const isGrouchie = currentPet === 'grouchie';
+  petActionButtons.hidden = isGrouchie;
+  lumieBtn.classList.toggle('active', currentPet === 'lumie');
+  grouchieBtn.classList.toggle('active', isGrouchie);
+  lumieBtn.setAttribute('aria-pressed', currentPet === 'lumie');
+  grouchieBtn.setAttribute('aria-pressed', isGrouchie);
+}
+
+function switchPet(nextPet) {
+  if (currentPet === nextPet) return;
+  stopProgram();
+  currentPet = nextPet;
+  petName.textContent = pet().name;
+  petKind.textContent = pet().kind;
+  moneyDisplay.textContent = '$' + stats().money;
+  updatePetControls();
+  updateHunger();
+  addLog(pet().arrival);
 }
 
 function addLog(msg) {
@@ -66,72 +199,62 @@ function addLog(msg) {
   log.scrollTop = log.scrollHeight;
 }
 
-feedBtn.addEventListener('click', () => {
-  if (hunger >= 100) {
-    addLog('Lumie is too full to eat!');
+function feedCurrentPet() {
+  const currentPetStats = stats();
+  if (currentPetStats.hunger >= 100) {
+    addLog(pet().fullMessage);
     return;
   }
-  hunger = Math.min(100, hunger + 20);
+  currentPetStats.hunger = Math.min(100, currentPetStats.hunger + 20);
   updateHunger();
-  const msgs = [
-    'Lumie gobbles up the food!',
-    'Lumie munches happily.',
-    'Nom nom nom...',
-    'Lumie says thank you!',
-  ];
-  addLog(msgs[Math.floor(Math.random() * msgs.length)]);
-});
+  addLog(randomFrom(pet().feedMessages));
+}
 
-workBtn.addEventListener('click', () => {
-  if (working) return;
-  working = true;
+function workCurrentPet() {
+  const currentPetStats = stats();
+  if (currentPetStats.working) return;
+  currentPetStats.working = true;
   workBtn.disabled = true;
 
-  petDisplay.textContent = WORK_PET;
-  petMood.textContent = '*zooooom*';
+  petDisplay.textContent = pet().faces.work;
+  petMood.textContent = pet().moods.working;
 
   petDisplay.classList.remove('jump');
   void petDisplay.offsetWidth;
   petDisplay.classList.add('jump');
 
-  const earns = hunger >= 50 ? 20 : 10;
-  money += earns;
-  moneyDisplay.textContent = '$' + money;
+  const earns = currentPetStats.hunger >= 50 ? 20 : 10;
+  currentPetStats.money += earns;
+  moneyDisplay.textContent = '$' + currentPetStats.money;
 
-  const msgs = hunger >= 50 ? [
-    `Lumie is well-fed and crushed it at work! +$${earns}!`,
-    `Full tummy = big energy! Lumie earned $${earns}!`,
-    `Lumie hustled extra hard — $${earns} earned!`,
-    `Happy Lumie is a productive Lumie! +$${earns}.`,
-  ] : [
-    `Lumie went to work and earned $${earns}!`,
-    `Lumie hustled hard — $${earns} earned!`,
-    `Lumie completed a job! +$${earns}.`,
-    `Lumie brought home $${earns}. Good girl!`,
-  ];
-  addLog(msgs[Math.floor(Math.random() * msgs.length)]);
+  const msgs = currentPetStats.hunger >= 50 ? pet().workMessagesFed(earns) : pet().workMessagesHungry(earns);
+  addLog(randomFrom(msgs));
 
-  if (hunger > 0) {
-    hunger = Math.max(0, hunger - 10);
+  if (currentPetStats.hunger > 0) {
+    currentPetStats.hunger = Math.max(0, currentPetStats.hunger - 10);
   }
 
   setTimeout(() => {
     petDisplay.classList.remove('jump');
     updateHunger();
-    working = false;
+    currentPetStats.working = false;
     workBtn.disabled = false;
   }, 600);
-});
+}
+
+feedBtn.addEventListener('click', feedCurrentPet);
+workBtn.addEventListener('click', workCurrentPet);
+lumieBtn.addEventListener('click', () => switchPet('lumie'));
+grouchieBtn.addEventListener('click', () => switchPet('grouchie'));
 
 setInterval(() => {
-  if (hunger > 0) {
-    hunger = Math.max(0, hunger - 5);
+  const currentPetStats = stats();
+  if (currentPetStats.hunger > 0) {
+    currentPetStats.hunger = Math.max(0, currentPetStats.hunger - 5);
     updateHunger();
-    if (hunger <= 10) addLog('Lumie is very hungry!');
+    if (currentPetStats.hunger <= 10) addLog(pet().hungryMessage);
   }
 }, 30000);
-
-updateHunger();
 
 // ── Instruction panel ──────────────────────────────────────────
 // Reads commands (one per line) and loops through them once per
@@ -145,16 +268,16 @@ const STEP_MS = 1000;
 let programTimer = null;
 let programLines = [];
 
-// Map a typed line to an action. Reuses the existing buttons so all
-// the animation, earnings and logging behaviour stays in one place.
+// Map a typed line to an action. Grouchie has no direct buttons, so
+// the control panel calls the same actions directly for every pet.
 function executeCommand(raw) {
   const cmd = raw.trim().toLowerCase();
   if (cmd.includes('work')) {
-    workBtn.click();
+    workCurrentPet();
     return true;
   }
-  if (cmd.includes('feed')) {
-    feedBtn.click();
+  if (cmd.includes('feed') || cmd.includes('fuel') || cmd.includes('charge')) {
+    feedCurrentPet();
     return true;
   }
 
@@ -229,3 +352,6 @@ const infoCloseBtn = document.getElementById('info-close-btn');
 
 infoBtn.addEventListener('click', () => infoOverlay.classList.toggle('hidden'));
 infoCloseBtn.addEventListener('click', () => infoOverlay.classList.add('hidden'));
+
+updatePetControls();
+updateHunger();
