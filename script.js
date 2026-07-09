@@ -134,8 +134,8 @@ setInterval(() => {
 updateHunger();
 
 // ── Instruction panel ──────────────────────────────────────────
-// Reads commands (one per line) and steps through them, one per
-// second, highlighting the current line — like a program counter.
+// Reads commands (one per line) and loops through them once per
+// second until STOP is pressed or a command cannot be understood.
 const instructionInput = document.getElementById('instruction-input');
 const instructionList = document.getElementById('instruction-list');
 const runBtn = document.getElementById('run-btn');
@@ -151,35 +151,39 @@ function executeCommand(raw) {
   const cmd = raw.trim().toLowerCase();
   if (cmd.includes('work')) {
     workBtn.click();
-  } else if (cmd.includes('feed')) {
-    feedBtn.click();
-  } else {
-    addLog(`Unknown command: "${raw.trim()}"`);
+    return true;
   }
+  if (cmd.includes('feed')) {
+    feedBtn.click();
+    return true;
+  }
+
+  addLog(`Syntax error: unknown command "${raw.trim()}". Program stopped.`);
+  return false;
 }
 
-// Re-draw the program tape, marking the active line and dimming the
-// lines that have already run. Pass -1 to clear all highlighting.
+// Re-draw the program tape, marking the active line. Pass -1 to
+// clear all highlighting.
 function renderProgram(activeIndex) {
   instructionList.innerHTML = '';
   programLines.forEach((line, i) => {
     const div = document.createElement('div');
     div.className = 'program-line';
     if (i === activeIndex) div.classList.add('active');
-    else if (activeIndex > -1 && i < activeIndex) div.classList.add('done');
     div.textContent = line.trim();
     instructionList.appendChild(div);
   });
 }
 
-function stopProgram() {
+function stopProgram(clearHighlight = true) {
   if (programTimer) {
     clearInterval(programTimer);
     programTimer = null;
   }
   runBtn.disabled = false;
+  stopBtn.disabled = true;
   instructionInput.disabled = false;
-  renderProgram(-1);
+  if (clearHighlight) renderProgram(-1);
 }
 
 runBtn.addEventListener('click', () => {
@@ -190,28 +194,32 @@ runBtn.addEventListener('click', () => {
     return;
   }
   runBtn.disabled = true;
+  stopBtn.disabled = false;
   instructionInput.disabled = true;
 
   let counter = 0;
-  renderProgram(counter);
-  executeCommand(programLines[counter]);
 
-  programTimer = setInterval(() => {
-    counter++;
-    if (counter >= programLines.length) {
-      stopProgram();
-      addLog('Instruction sequence complete! ✓');
+  function runNextCommand() {
+    renderProgram(counter);
+    const commandWorked = executeCommand(programLines[counter]);
+    if (!commandWorked) {
+      stopProgram(false);
       return;
     }
-    renderProgram(counter);
-    executeCommand(programLines[counter]);
-  }, STEP_MS);
+    counter = (counter + 1) % programLines.length;
+  }
+
+  addLog('Instruction loop started. Press STOP to end it.');
+  programTimer = setInterval(runNextCommand, STEP_MS);
+  runNextCommand();
 });
+
+stopBtn.disabled = true;
 
 stopBtn.addEventListener('click', () => {
   if (!programTimer) return;
   stopProgram();
-  addLog('Instructions stopped.');
+  addLog('Instruction loop stopped.');
 });
 
 // ── Info overlay ───────────────────────────────────────────────
