@@ -16,10 +16,15 @@
     <!-- Pet display -->
     <div class="panel pet-panel">
       <h3>✦ YOUR PET</h3>
+      <div class="pet-switcher" aria-label="Choose your pet">
+        <button id="lumie-btn" class="pet-switch active" aria-pressed="true">🐾 LUMIE</button>
+        <button id="grouchie-btn" class="pet-switch" aria-pressed="false">🤖 GROUCHIE</button>
+      </div>
       <div id="pet-name">LUMIE</div>
+      <div id="pet-kind">cute carbon based lifeform</div>
       <div id="pet-display"></div>
       <div id="pet-mood">*stares at you expectantly*</div>
-      <div class="btn-row">
+      <div class="btn-row" id="pet-action-buttons">
         <button id="feed-btn">🍖 FEED</button>
         <button id="work-btn">💼 WORK</button>
       </div>
@@ -56,7 +61,7 @@
     <!-- Instruction panel -->
     <div class="panel instruction-panel">
       <h3>✦ INSTRUCTION PANEL</h3>
-      <p class="instruction-hint">One command per line. START loops forever through your commands until you hit STOP. Try <em>press work button</em> or <em>press feed button</em>.</p>
+      <p class="instruction-hint">One command per line. START loops forever through your commands until you hit STOP. Try <em>press work button</em> or <em>press feed button</em>. Grouchie has no pet buttons, so command him here.</p>
       <textarea id="instruction-input" spellcheck="false" rows="5">press work button
 press work button
 press work button</textarea>
@@ -78,11 +83,11 @@ press work button</textarea>
             <tr><th>Command</th><th>Action</th></tr>
           </thead>
           <tbody>
-            <tr><td>press work button</td><td>Makes Lumie work. Earns $10 (or $20 if hunger &gt; 50%).</td></tr>
-            <tr><td>press feed button</td><td>Feeds Lumie, adding 20% hunger. Max 100%.</td></tr>
+            <tr><td>press work button</td><td>Makes the current pet work. Earns $10 (or $20 if hunger &gt; 50%).</td></tr>
+            <tr><td>press feed button</td><td>Feeds Lumie or fuels Grouchie, adding 20% hunger/fuel. Max 100%.</td></tr>
           </tbody>
         </table>
-        <p class="info-tip">💡 Commands are matched by keyword — <em>work</em> or <em>feed</em> anywhere in the line will work. START repeats the list until STOP, or until an unknown command causes a syntax error.</p>
+        <p class="info-tip">💡 Commands are matched by keyword — <em>work</em>, <em>feed</em>, <em>fuel</em>, or <em>charge</em> anywhere in the line will work. START repeats the list until STOP, or until an unknown command causes a syntax error.</p>
       </div>
     </div>
 
